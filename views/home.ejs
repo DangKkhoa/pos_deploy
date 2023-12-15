@@ -19,6 +19,7 @@
 
         .card-container {
             display: flex;
+            height: 50%;
         }
 
         .card {
@@ -45,6 +46,7 @@
 
         @media screen and (max-width: 1200px) {
             .card-container {
+                height: 100%;
                 display: grid;
                 grid-template-columns: auto auto;
 
@@ -98,7 +100,7 @@
     </header>
     <div class="container-fluid w-100 d-flex flex-column " style="padding: 0 10px; position: relative; height: calc(100vh - 150px);" >
         <div class="header d-flex" style="gap: 12px;">
-            <div class="card-container border border-2", style=" gap: 5px;">
+            <div class="card-container", style=" gap: 5px">
                 <% if(user.is_admin) { %>
                 <a href="/salespersons">
                 <div class="card mb-3 " style="min-width: 12rem; padding: 10px 0; background-color: rgb(34, 231, 133);">

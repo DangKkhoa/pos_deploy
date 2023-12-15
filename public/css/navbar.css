@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+    font-family: 'Font Awesome', 'Roboto', sans-serif;
+}
+body {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.myNavbar {
+    box-sizing: border-box;
+    height: 100%;
+    position: fixed;
+    padding-top: 40px;
+    background-color: #323847 ;
+    transition: width .3s ease;
+    width: 0;
+    top: 0;
+    left: 0;
+    /* display: none; */
+    overflow-x: hidden;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+
+
+.myNavbar button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    color: #FFFFFF
+
+}
+
+.myNavbar button:hover {
+    cursor: pointer;
+}
+
+.myNavbar .user_profile {
+    margin-bottom: 10px;
+}
+
+.myNavbar .user_profile a {
+    display: block;
+    text-align: left;
+    font-size: 18px;
+    padding: 10px;
+    color: #FFFFFF;
+    text-decoration: none;
+    overflow-x: hidden;
+}
+
+.myNavbar .user_profile a:hover {
+    background-color: #5294E2;
+}
+
+
+
+.myNavbar .user_profile a img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.myNavbar .nav-menu {
+    margin-top: 10px;
+}
+.myNavbar .nav-menu a {
+    display: block;
+    text-align: left;
+    font-size: 18px;
+    padding: 20px;
+    color: #FFFFFF;
+    text-decoration: none;
+    overflow-x: hidden;
+}
+
+.active {
+    background-color: #5294E2;
+}
+
+
+.myNavbar .nav-menu a:hover {
+    background-color: #5294E2;
+    color: #F9F9F9;
+
+}
+
+.myNavbar .nav-menu .link-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    
+}
+.myNavbar .nav-menu .product-management-features {
+    display: none;
+    background-color: #DCD6F7;
+    list-style-type: none;
+    /* width: 100%;     */
+    
+}
+
+.myNavbar .nav-menu .product-management-features .feature {
+
+}
+.myNavbar .nav-menu .product-management-features .feature  a {
+    color: #424874;
+
+}
+
+.myNavbar .nav-menu .product-management-features .feature  a:hover {
+    background-color: #A6B1E1;
+}
+.open-nav-button {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    font-size: 26px;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+.open-nav-button:hover {
+    cursor: pointer;
+}

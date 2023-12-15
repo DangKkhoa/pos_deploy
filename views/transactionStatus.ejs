@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Complete <i class="fa-regular fa-face-smile-beam"></i></title>
+    <script src="https://kit.fontawesome.com/ad1797946c.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        body {
+            width: 100%;
+            text-align: center;
+            padding: 10px
+        }
+
+        .complete {
+            width: 50%;
+            margin: auto;
+            /* height: 100px; */
+            /* background-color: rgb(31, 189, 31); */
+            padding: 20px 0;
+            font-size: 20px;
+        }
+
+        span {
+            color: rgb(223, 71, 71)
+        }
+        
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <% if(transaction_complete === 'true') { %>
+        <div class="alert alert-success">
+            <p><i class="fa-regular fa-circle-check"></i></p>
+            <p style="margin-bottom: 5px;">Your transaction has been stored. Hope to see you next tiem. Thank you <i class="fa-regular fa-face-smile-beam"></i></p>
+            <p>Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
+        </div>
+    <% } else { %>
+        <div class="alert alert-danger">
+            <p><i class="fa-regular fa-circle-check"></i></p>
+            <p style="margin-bottom: 5px;">Cannot process your transaction. Please try again later <i class="fa-solid fa-face-frown"></i></p>
+            <p>Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
+        </div>
+    <% } %>
+    <script>
+        const count_down = document.getElementById('count-down')
+
+        let sec = 3
+        const interval = setInterval(function() {
+            count_down.innerHTML = sec
+            sec--
+
+            if(sec < 0) {
+                clearInterval(interval)
+                window.location.href = '/transaction'
+            }
+        }, 1000)
+    </script>
+</body>
+</html>

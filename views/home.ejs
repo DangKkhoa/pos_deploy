@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="https://kit.fontawesome.com/ad1797946c.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,100;1,300&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+        .card {
+            height: 50%;
+            border: none;
+            /* border-radius: 0; */
+            border-radius: 10px;
+            color: #323847
+        }
+
+        .card .card-header {
+            border: none;
+            background-color: inherit;
+        }
+        .card .card-header span {
+            font-size: 10px;
+        }
+
+        .card .card-body p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+
+
+        
+    </style>
+</head>
+<body>
+    <!-- navgiation bar -->
+    
+    <%- include('navbar') %>
+    <header>
+        <div class="container-bar">
+            <div class="greeting"><h1>Welcome, <span><%= user.fullname %></span></h1></div>
+            <div class="logout"><div><a href="/logout" class=""><i class="fa-solid fa-right-from-bracket"></i> Log out</a></div></div>
+        </div>
+    </header>
+    <div class="container-fluid w-100 d-flex flex-column justify-content-between" style="padding: 0 10px; position: relative; height: calc(100vh - 150px);" >
+        <div class="card-container d-flex " style="gap: 12px; max-width: 100%; min-height: 300px; ">
+            <% if(user.is_admin) { %>
+            <a href="/salespersons">
+            <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(34, 231, 133);">
+                <div class="card-header h5"># Salespersons <i class="fa-solid fa-users"></i></div>
+                <div class="card-body d-flex align-items-center">
+                    <p class="card-title "><%= general_data[0].salesperson_quantity %></p>
+                </div>
+            </div>
+            </a>
+            <a href="/customers">
+            <div class="card   mb-3" style="width: 18rem; padding: 10px 0; background-color: rgb(144, 238, 238);">
+                <div class="card-header h5"># Customer <i class="fa-solid fa-user-tag"></i></div>
+                <div class="card-body d-flex align-items-center"> 
+                    <p class="card-title "><%= general_data[0].customer_quantity %></p>
+                </div>
+            </div>
+            </a>
+            <a href="/sale_history">
+            <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(225, 138, 233)">
+                <div class="card-header h5"># Orders <i class="fa-solid fa-cart-arrow-down"></i></div>
+                <div class="card-body d-flex align-items-center">
+                    <p class="card-title "><%= general_data[0].order_quantity %></p>
+                     
+                </div>
+            </div>
+            </a>
+            <a href="/sale_history">
+            <div class="card   mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(245, 245, 141);">
+                <div class="card-header h5 "># Total Revenue <i class="fa-solid fa-sack-dollar"></i></div>
+                <div class="card-body d-flex align-items-center">
+                    <p class="card-title"><%= general_data[0].total_revenue %></p>
+                    
+                </div>
+            </div>
+            </a>
+            <% } else { %>
+                <a href="/customers">
+                    <div class="card   mb-3" style="width: 18rem; padding: 10px 0; background-color: rgb(144, 238, 238);">
+                        <div class="card-header h5">
+                            # Product Sold <i class="fa-solid fa-mobile-screen-button"></i>
+                            <span style="font-size: 10px;">this month</span>
+                        </div>
+                        <div class="card-body d-flex align-items-center"> 
+                            <p class="card-title "><%= general_data[0].total_quantity_sold %></p>
+                        </div>
+                    </div>
+                </a>
+                <a href="/sale_history">
+                    <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(225, 138, 233)">
+                        <div class="card-header h5">
+                            # Orders <i class="fa-solid fa-cart-arrow-down"></i>
+                            <span>this month</span>
+                        </div>
+                        <div class="card-body d-flex align-items-center">
+                            <p class="card-title "><%= general_data[0].order_quantity %></p>
+
+                        </div>
+                    </div>
+                </a>
+                <a href="/sale_history">
+                    <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(245, 245, 141);">
+                        <div class="card-header h5 ">
+                            # Total Revenue <i class="fa-solid fa-sack-dollar"></i>
+                            <span>this month</span>
+                        </div>
+                        <div class="card-body d-flex align-items-center">
+                            <p class="card-title"><%= general_data[0].total_revenue %></p>
+                        </div>
+                    </div>
+                </a>
+            <% } %>
+
+
+            <div class="card mb-3 flex-grow-1 h-100" style="width: 18rem; ">
+                <div class="table-responsive " > 
+                    <table class="table table-striped table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <td colspan="3" class="text-center h4">Top 5 most sold products <i class="fa-solid fa-ranking-star"></i></td>
+                            </tr>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let i = 1 %>
+                                <% top5_products.forEach(p => { %>
+                                    <tr>
+                                        <td><%= i++ %></td>
+                                        <td><%= p.product_name %></td>
+                                        <td><%= p.quantity %></td>
+                                    </tr>
+                                <% }) %>
+                        <!-- <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>iPhone X</td>
+                            <td></td>
+                        </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="chart-container" style="height:40vh;  width: 100%">
+            <% if(user.is_admin) { %>
+                <canvas id="chart" width="1"></canvas>
+            <% } else { %>
+                <canvas id="chart" width="1" ></canvas>
+            <% } %>
+        </div>
+
+
+    </div>
+
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/sale_history/data')
+            const data = await response.json()
+            console.log(data)
+            const x_label = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            const ctx = document.getElementById('chart').getContext('2d');
+            if(data.role === 1) {
+                const processed_sale_data = Array.from({ length: 12 }, (_, index) => {
+                    const monthData = data.sales.find(item => item.month === index + 1);
+                    return monthData || { month: index + 1, total_profit: 0 };
+                });
+                // console.log(result)
+
+                const profit_axis = processed_sale_data.map(sale => sale.total_profit)
+                // console.log(total_revenue_axis)
+
+
+                const myChart1 = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                    labels: x_label,
+                    datasets: [{
+                        label: 'Total profit',
+                        data: profit_axis,
+                        borderColor: '#4bc0c0',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 22
+                                    }
+                                }
+                            },
+                        }, 
+                    }
+                });
+            }
+            else {
+                const processed_sale_data = Array.from({ length: 12 }, (_, index) => {
+                    const monthData = data.sales.find(item => item.month === index + 1);
+                    return monthData || { month: index + 1, total_revenue: 0, total_quantity_sold: 0 };
+                });
+                // console.log(result)
+
+                const profit_axis = processed_sale_data.map(sale => sale.total_revenue)
+                // console.log(total_revenue_axis)
+
+
+                const myChart1 = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                    labels: x_label,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: profit_axis,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                    },
+                    options: {
+
+                    }
+                });
+            }
+        })
+</script>
+</html>

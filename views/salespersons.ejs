@@ -1,0 +1,202 @@
+<!-- admin.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <!-- Include Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <style>
+    .container {
+      margin-top: 20px; /* Add some margin to the top of the container */
+      margin-bottom: 100px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('navbar') %>
+  <div id="notificationArea" class="fixed-top w-25 m-2"></div> <!-- Notification area -->
+  <div class="container mt-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      
+      <h1>Saleperson management</h1>
+      
+    </div>
+    
+    <!-- Add Salesperson Form Modal Trigger Button -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSalespersonModal">
+      Add Salesperson
+    </button>
+
+    <!-- Salesperson List -->
+    <div class="container mt-3">
+    
+    <h2 class="my-4">Salespersons (<span id="salesperson-quantity"><%= number_salespersons %></span>)</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center align-baseline">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Full name</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% salespersons.forEach(s => { %>
+            <tr id="<%= s.user_id %>">
+              <td><a href="/user_profile?id=<%= s.user_id %>"><%= s.user_id%></a></td>
+              <td><%= s.username %></td>
+              <td><%= s.email %></td>
+              <td><%= s.fullname %></td>
+              <td>
+                <% if(s.is_locked) { %>
+                  Locked
+                <% } else { %>
+                  Unlocked
+                <% } %>
+              </td>
+              <td>
+                <button type="button" data-id="<%= s.user_id %>" data-name="<%= s.fullname %>" class="btn btn-outline-danger btn-delete" data-bs-toggle="modal" data-bs-target="#deleteSalespersonModal">Delete</button>
+                <button type="button" data-id="<%= s.user_id %>" data-name="<%= s.fullname %>" class="btn btn-outline-info btn-send-link">Send link</button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    </div> 
+  </div>
+
+  <!-- Add Salesperson Modal
+  <div class="modal fade" id="addSalespersonModal" tabindex="-1" aria-labelledby="addSalespersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSalespersonModalLabel">Add Salesperson</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          <form id="addSalespersonForm" method="POST" action="/salepersons/add">
+            <div class="form-group">
+              <label for="name">Fullname:</label>
+              <input type="text" class="form-control" id="name" name="fullname" required>
+            </div>
+            <div class="form-group mt-2">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Add Salesperson</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Add Salperson modal -->
+  <div class="modal fade" id="addSalespersonModal" tabindex="-1" aria-labelledby="addSalespersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addSalespersonModalLabel">Add Salesperson</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addSalespersonForm" method="POST" action="/salespersons/add">
+            <div class="form-group">
+              <label for="name">Fullname:</label>
+              <input type="text" class="form-control" id="name" name="fullname" required>
+            </div>
+            <div class="form-group mt-2">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2 add-btn-comfirmed">Add Salesperson</button>
+          </form>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" data-id="" id="add-btn-confirmed" class="btn btn-primary">Confirm</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete saleperson modal-->
+  <div class="modal fade" id="deleteSalespersonModal" tabindex="-1" aria-labelledby="deleteSalespersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="deleteSalespersonModalLabel">Delete user</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Delete salesperson <strong id="delete-salesperson-name"></strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" data-id="" id="delete-btn-confirmed" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    $('.btn-delete').click(e => {
+      const btn = e.target
+      const id = btn.dataset.id
+      const name = btn.dataset.name
+      $('#delete-btn-confirmed').attr('data-id', id)
+      $('#delete-salesperson-name').text(name) 
+    })
+    $('#delete-btn-confirmed').click(e => {
+      $('#deleteSalespersonModal').modal('hide')
+      const btn = e.target
+      const salesperson_id = btn.dataset.id
+
+      fetch('http://localhost:8080/salespersons/delete/' + salesperson_id, {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        // console.log(json) 
+        if(json.code === 0) {
+          $(`tr#${salesperson_id}`).remove()
+          const salesperson_quantity = parseInt($('#salesperson-quantity').text(), 10) - 1
+          $('#salesperson-quantity').text(salesperson_quantity)
+        }
+        else {
+          console.log('Something went wrong')
+        }
+
+      })
+      .catch(err => console.log(err))
+    })
+
+    $('#add-btn-comfirm').click(e => {
+      fetch('http://localhost:8080/salespersons/add', {
+        method: 'POST'
+      })
+      .then(res => res.json())
+      .then(json => {
+        if(json.code === 1) {
+          console.log('Something went wrong')
+        }
+      })
+    }) 
+    
+
+  </script>
+</body>
+</html>

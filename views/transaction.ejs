@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <script src="/js/transaction.js" defer></script>
+    <link rel="stylesheet" href="/css/transaction.css">
+    <script src="https://kit.fontawesome.com/ad1797946c.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,100;1,300&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <%- include('navbar') %>
+        <header>
+            <div class="product-search" >
+                <form action="/transaction" method="GET">
+                    <input type="text" id="product-search" name="product_name" placeholder="Enter product name or id...">
+                    <button><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+            </div>                
+        </header>
+        <main>
+            <div class="container">
+                <ul class="product-category">
+                    <li class="category" style="text-align: center;"><a href="/transaction/products/phone">Mobile Phone <i class="fa-solid fa-mobile-screen-button"></i></a></li>
+                    <li class="category" style="text-align: center;"><a href="/transaction/products/earphone">Headphones <i class="fa-solid fa-headphones"></i></a></li>
+                    <li class="category" style="text-align: center;"><a href="/transaction/products/charging">Charger <i class="fa-solid fa-bolt"></i></a></li>
+                    <li class="category" style="text-align: center;"><a href="/transaction/products/laptop">Laptop <i class="fa-solid fa-laptop"></i></a></li>
+                    <li class="category" style="text-align: center;"><a href="/transaction/products/apple">Apple <i class="fa-brands fa-apple"></i></a></li>
+                    <!-- <li class="category" style="text-align: center;"><a href="/products/phone">Dessert <i class="fa-solid fa-ice-cream"></i></a></li> -->
+                    
+                </ul>
+            
+            <div class="product-grid">
+                
+                <div class="product-grid-item">
+                    <% products.forEach(p => { %>
+                        <div class="product-item" data-id="<%= p.product_id %>" data-price="<%= p.retail_price %>" data-name="<%= p.product_name %>">
+                            <img src="/images/<%=p.image %>" alt="">
+                            <div>
+                                <p style="text-align: center;" class="product-name" ><%= p.product_name %></p>
+                                <p style="text-align: center;" class="product-name" ><%= p.retail_price %>$</p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+                
+            </div>
+                
+                            
+            <div class="product-order">
+                <div class="product-order-header">
+                    <h1>YOUR ORDER</h1>
+                    <h3>#<%= sale_id %></h3>
+                    <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20" autocomplete="off"></p>
+                    <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
+                    <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
+                </div>
+                <hr>
+
+                <div class="product-selected">
+                
+                        <table class="selected-detail" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50%">Name</th>
+                                    <th>Quantity</th>
+                                    <th style="width: 20%;">Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-table-body">
+
+                            </tbody>
+
+                            <tfoot>
+                                <tr style="background-color: #c2c2c2;">
+                                    
+                                    <!-- <td id="total-quantity" >0</td>
+                                    <td id="total-cost">0</td> -->
+                                </tr>
+                            </tfoot>
+                        </table>
+                </div>
+                <div class="total-payment">
+                    
+                    <div><strong>Total quantity</strong>: <span id="total-quantity">0</span></div>
+                    <div><strong>Total cost</strong>: <span id="total-cost">0</span></div>
+                    <div><strong>Customer gives: </strong><input type="number" id="customerPay"></div>
+                    <div><strong>Change: </strong><span id="changeToCustomer">0</span></div>
+                </div>
+                <div class="cart-process">
+                    <div class="cart-buttons">
+                        <button id="clear-cart">Clear <i class="fa-regular fa-trash-can"></i></button>
+                        <button id="complete-payment">Confirm <i class="fa-solid fa-check"></i></button>
+                    </div> 
+                </div>
+            </div>
+        </main>
+    </body>
+
+    <script>
+    // /This function is for "Phone" to receive only numbers
+        function validatePhoneNumber() {
+        // Get the input element
+            var phoneInput = document.getElementById('phoneNumberInput');
+        
+            // Remove non-numeric characters using a regular expression
+            phoneInput.value = phoneInput.value.replace(/\D/g, '');
+        }
+        //This function is for "Name" to receive only letters
+        function validateName() {
+            // Get the input element
+            var nameInput = document.getElementById('nameInput');
+        
+            // Remove non-alphabetic characters using a regular expression
+            nameInput.value = nameInput.value.replace(/[^A-Za-z]/g, '');
+        }
+
+        // Function to format the date and time as DD/MM/YYYY HH:mm:ss
+        function formatDateTime(dateTime) {
+            const options = { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            return new Intl.DateTimeFormat('en-GB', options).format(dateTime);
+        }
+
+    // Set the current date and time when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('dateInput');
+            const currentDate = new Date();
+            dateInput.value = formatDateTime(currentDate);
+        });
+
+        function lookupCustomerByPhone(phoneNumber) {
+            fetch(`/api/lookup/${phoneNumber}`)
+            .then(response => response.json())
+            .then(data => {
+              // Update the name and address fields with data from the server
+              document.getElementById('nameInput').value = data.name;
+              // Add logic to update address field if needed
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+}
+
+        // Attach an event listener to the phone number input
+        const phoneInput = document.getElementById('phoneNumberInput');
+        phoneInput.addEventListener('input', function () {
+          const phoneNumber = this.value;
+          lookupCustomerByPhone(phoneNumber);
+        });    
+
+    </script>
+        
+</html>

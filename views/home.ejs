@@ -69,6 +69,14 @@
                 grid-template-columns: auto;
 
             }
+
+            .greeting h1 {
+                font-size: 30px;
+            }
+
+            .logout {
+                display: none;
+            }
             
         }
 
@@ -82,7 +90,9 @@
                 display: grid;
                 grid-template-columns: auto auto;
             }
-            
+            .greeting h1 {
+                font-size: 22px;
+            }
         }
 
         
@@ -112,7 +122,7 @@
                 </a>
                 <a href="/customers">
                 <div class="card   mb-3" style="min-width: 12rem; padding: 10px 0; background-color: rgb(144, 238, 238);">
-                    <div class="card-header h5"># Customer <i class="fa-solid fa-user-tag"></i></div>
+                    <div class="card-header h5"><p># Customer <i class="fa-solid fa-user-tag"></i></p></div>
                     <div class="card-body d-flex align-items-center"> 
                         <p class="card-title "><%= general_data[0].customer_quantity %></p>
                     </div>
@@ -120,7 +130,7 @@
                 </a>
                 <a href="/sale_history">
                 <div class="card mb-3 " style="min-width: 12rem; padding: 10px 0; background-color: rgb(225, 138, 233)">
-                    <div class="card-header h5"># Orders <i class="fa-solid fa-cart-arrow-down"></i></div>
+                    <div class="card-header h5"><p># Orders <i class="fa-solid fa-cart-arrow-down"></i></p></div>
                     <div class="card-body d-flex align-items-center">
                         <p class="card-title "><%= general_data[0].order_quantity %></p>
 
@@ -129,7 +139,7 @@
                 </a>
                 <a href="/sale_history">
                 <div class="card   mb-3 " style="min-width: 12rem; padding: 10px 0; background-color: rgb(245, 245, 141);">
-                    <div class="card-header h5 "># Total Revenue <i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="card-header h5 "><p># Total Revenue <i class="fa-solid fa-sack-dollar"></i></p></div>
                     <div class="card-body d-flex align-items-center">
                         <p class="card-title"><%= general_data[0].total_revenue %></p>
 
@@ -138,36 +148,36 @@
                 </a>
                 <% } else { %>
                     <a href="/customers">
-                        <div class="card   mb-3" style="width: 18rem; padding: 10px 0; background-color: rgb(144, 238, 238);">
+                        <div class="card   mb-3" style="min-width: 14rem; padding: 10px 0; background-color: rgb(144, 238, 238);">
                             <div class="card-header h5">
-                                # Product Sold <i class="fa-solid fa-mobile-screen-button"></i>
-                                <span style="font-size: 10px;">this month</span>
+                                <p># Product Sold <i class="fa-solid fa-mobile-screen-button"></i></p>
+                                <span style="color: #747476;">this month</span>
                             </div>
                             <div class="card-body d-flex align-items-center"> 
-                                <p class="card-title "><%= general_data[0].total_quantity_sold %></p>
+                                <p class="card-title "><%= general_data[0].total_quantity_sold || 0 %></p>
                             </div>
                         </div>
                     </a>
                     <a href="/sale_history">
-                        <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(225, 138, 233)">
+                        <div class="card mb-3 " style="min-width: 14rem; padding: 10px 0; background-color: rgb(225, 138, 233)">
                             <div class="card-header h5">
-                                # Orders <i class="fa-solid fa-cart-arrow-down"></i>
-                                <span>this month</span>
+                                <p># Orders <i class="fa-solid fa-cart-arrow-down"></i></p>
+                                <span style="color: #747476;">this month</span>
                             </div>
                             <div class="card-body d-flex align-items-center">
-                                <p class="card-title "><%= general_data[0].order_quantity %></p>
+                                <p class="card-title "><%= general_data[0].order_quantity || 0 %></p>
 
                             </div>
                         </div>
                     </a>
                     <a href="/sale_history">
-                        <div class="card mb-3 " style="width: 18rem; padding: 10px 0; background-color: rgb(245, 245, 141);">
-                            <div class="card-header h5 ">
-                                # Total Revenue <i class="fa-solid fa-sack-dollar"></i>
-                                <span>this month</span>
+                        <div class="card mb-3 " style="min-width: 14rem; padding: 10px 0; background-color: rgb(245, 245, 141);">
+                            <div class="card-header h5">
+                                <p># Total Revenue <i class="fa-solid fa-sack-dollar"></i></p>
+                                <span style="color: #747476;">this month</span>
                             </div>
                             <div class="card-body d-flex align-items-center">
-                                <p class="card-title"><%= general_data[0].total_revenue %></p>
+                                <p class="card-title"><%= general_data[0].total_revenue || 0%></p>
                             </div>
                         </div>
                     </a>

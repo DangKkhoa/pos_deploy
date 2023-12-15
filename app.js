@@ -76,6 +76,7 @@ app.get('/', (req, res) => {
     generDataModel.getTop5Products() 
     .then(products => {
       console.log(products)
+      console.log(data)
       res.render('home', {user: user, general_data: data, top5_products: products})
       return 
     })

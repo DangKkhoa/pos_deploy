@@ -77,3 +77,10 @@ header .container-bar .logout > div > a {
 .container .dashboard-container .staff-list {
     /* grid-row: ; */
 }
+
+@media screen and (max-width: 600px){
+    .card {
+        height: 100%;
+    }
+    
+}

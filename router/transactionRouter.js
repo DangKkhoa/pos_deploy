@@ -1,6 +1,8 @@
 const express = require('express')
 const con = require('../database/db')
 const productData = require('../model/product/ProductModel')
+const pdf = require('pdfkit')
+const fs = require('fs')
 const app = express.Router()
 
 let categories = new Set()
@@ -95,6 +97,7 @@ app.post('/processing', (req, res) => {
     id_using = []
 
     const {products, total_cost, total_quantity, date, time, amount_given_by_customer, change_to_customer} = req.body
+    console.log(products)
     if(products.length === 0) {
         return res.redirect('/transaction')
     }
@@ -104,6 +107,16 @@ app.post('/processing', (req, res) => {
     
     const insert_saledetail_statement = 'INSERT INTO Sale_Details (quantity, unit_price, sale_id, product_id) VALUES (?, ?, ?, ?)'
 
+    const bill = {
+        customer: 'John Doe',
+        products: products,
+        total_price: total_cost,
+        total_quantity: total_quantity,
+        date: date,
+        time: time,
+        amount_given_by_customer: amount_given_by_customer,
+        change_to_customer: change_to_customer
+    }
     
 
     con.query(insert_sale_statement, params_sale, (insertError, insertResult) => {
@@ -120,6 +133,7 @@ app.post('/processing', (req, res) => {
                 con.query(insert_saledetail_statement, params_saledetail, (insertSaledetailError, insertSaledetailResult) => {
                     if(insertSaledetailError) {
                         reject(insertSaledetailError)
+                        return
                     }
                     else {
                         console.log('Added successfully')
@@ -132,6 +146,61 @@ app.post('/processing', (req, res) => {
 
         Promise.all([Promise.all(insert_saledetail_promise)])
         .then(() => {
+            const doc = new pdf()
+            const stream = fs.createWriteStream(`invoices/${sale_id}.pdf`)
+            doc.pipe(stream)
+
+            const center_position = (doc.page.width - doc.widthOfString('Quantity')) / 2
+            
+
+            doc
+            .fontSize(20)
+            .text('Invoice', {align: 'center'})
+            .fontSize(16)
+            .text(`#${sale_id}`, {align: 'center'})
+            .moveDown(0.5)
+
+            doc
+            .moveTo(center_position - 250 + doc.widthOfString('Price'), doc.y)
+            .lineTo(center_position + 250, doc.y)
+            .stroke()
+            .moveDown(1)
+
+            doc
+            .fontSize(14)
+            .text(`Customer: ${bill.customer}`, center_position - 250)
+            .text(`Date - time: ${bill.date} - ${bill.time}`, center_position - 250)
+            .text(`Salesperson: ${req.session.user.fullname}`, center_position - 250)
+
+            
+            let header_y_position = doc.y + 40
+            doc
+            .fontSize(12)
+            .text('Product name', center_position - 250, header_y_position)
+            .text('Quantity', center_position, header_y_position)
+            .text('Price', center_position + 250, header_y_position, {width: 100})
+
+            let content_y_position = header_y_position + 20
+            bill.products.forEach(p => {
+                doc.text(p[1].name, center_position - 250, content_y_position)
+                    .text(p[1].quantity, center_position, content_y_position)
+                    .text(p[1].price, center_position + 250, content_y_position, {width: 100})
+                content_y_position += 20
+            })
+
+            doc
+            .fontSize(14)
+            .text(`Total price: ${bill.total_price}`, center_position - 250, doc.y + 40)
+            .text(`Customer gave: ${bill.amount_given_by_customer}`, center_position - 250, doc.y)
+            .text(`Change: ${bill.change_to_customer}`, center_position - 250, doc.y)
+
+
+            doc.end()
+            stream.on('finish', () => {
+                console.log(`Invoice with id ${sale_id} printed successfully`)
+            })
+
+            
             res.redirect('/transaction/processing?complete=true')
         })
         .catch(err => {

@@ -15,10 +15,10 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-var homepageLink = 'http://localhost:8080/login';
+var homepageLink = 'http://';
 var mailOptions = {
   from: 'dkkhoa10a8@gmail.com',
-  to: 'huongyen3113@gmail.com',
+  to: 'chitan2411@gmail.com',
   subject: 'From admin',
   text: `Your account has now been created`,
   html: `<h1>Welcome! Your account has been created</h1>

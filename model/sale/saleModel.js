@@ -136,7 +136,7 @@ exports.getSalesByDate = (start_date, end_date) => {
             params = [start_date]
             if(!cache_storage.orders_from_start || Date.now() - cache_storage.last_update > cache_timeout) {
                 try {
-                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND CURDATE()', [start_date])
+                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND CURDATE() AND user_id IS NOT NULL', [start_date])
                     cache_storage.orders_from_start = result[0].count
                     cache_storage.last_update = Date.now()
                 } 
@@ -162,7 +162,7 @@ exports.getSalesByDate = (start_date, end_date) => {
             params = ['2023-01-01', end_date]
             if(!cache_storage.orders_from_start || Date.now() - cache_storage.last_update > cache_timeout) {
                 try {
-                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND ?', ['2023-01-01', end_date])
+                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND ? AND user_id IS NOT NULL', ['2023-01-01', end_date])
                     cache_storage.orders_to_end = result[0].count
                     cache_storage.last_update = Date.now()
                 } 
@@ -188,7 +188,7 @@ exports.getSalesByDate = (start_date, end_date) => {
             params = [start_date, end_date]
             if(!cache_storage.orders_start_end || Date.now() - cache_storage.last_update > cache_timeout) {
                 try {
-                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND ?', [start_date, end_date])
+                    const [result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date BETWEEN ? AND ? And user_id IS NOT NULL', [start_date, end_date])
                     cache_storage.orders_start_end = result[0].count
                     cache_storage.last_update = Date.now()
                 } 
@@ -272,7 +272,7 @@ exports.getSalesToday = (user_id) => {
             sql = 'SELECT Sales.*, Users.fullname FROM Sales INNER JOIN Users ON Sales.user_id = Users.user_id WHERE Sales.sale_date = CURDATE() ORDER BY Sales.sale_date'
             if(!cache_storage.orders_today || Date.now() - cache_storage.last_update > cache_timeout) {
                 try {
-                    const [count_result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date = CURDATE()')
+                    const [count_result] = await promise_con.query('SELECT COUNT(*) AS count FROM Sales WHERE sale_date = CURDATE() AND user_id IS NOT NULL')
                     cache_storage.orders_today = count_result[0].count
                     cache_storage.last_update = Date.now()
                 } 

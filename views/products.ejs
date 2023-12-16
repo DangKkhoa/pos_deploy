@@ -1,0 +1,172 @@
+<!-- admin.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Management</title>
+  <!-- Include Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+  <style> 
+
+    .button-spacing {
+        margin-right: 5px; /* Adjust the margin as needed */
+        margin-bottom :20px;
+        
+    }
+
+    .container {
+      margin-top: 20px; /* Add some margin to the top of the container */
+      margin-bottom: 100px;
+    }
+
+    .d-flex {
+    display: flex;
+    }
+
+    .justify-content-between {
+    justify-content: space-between;
+    }
+
+    .align-items-center {
+    align-items: center;
+    }
+
+    .home-button {
+      margin-right: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 5px;
+    }
+
+    label {
+      margin-bottom: 3px;
+    }
+  </style> 
+</head>
+<body>
+  <!-- products.ejs -->
+
+  <%- include('navbar') %>
+  <% if (success) { %>
+    <div class="alert alert-success" role="alert">
+      Product updated successfully!
+    </div>
+  <% } %>
+  <div class="container mt-5">
+    <h1>Product Management</h1>
+
+    <!-- Display Product List -->
+    <h2>Products</h2>
+
+    <% if (user.is_admin === 1) { %>
+      <!-- Add New Product Button for Admin -->
+      <button type="button" class="btn btn-primary button-spacing" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        Add a new product
+      </button>
+    <% } %>
+    <table class="table table-bordered">
+      <!-- Add table headers based on your database columns -->
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Import Price</th>
+          <th>Retail Price</th>
+          <th>Manufacturer</th>
+          <th>Category</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.product_id %></td>
+            <td><%= product.product_name %></td>
+            <td><%= product.import_price %></td>
+            <td><%= product.retail_price %></td>  
+            <td><%= product.manufacturer %></td>
+            <td><%= product.category %></td>
+            <td>
+              <% if (user.is_admin === 1) { %>
+                  <!-- Add buttons for admin actions -->
+                  <a href="/updateproducts?product_id=<%= product.product_id %>" class="btn btn-warning button-spacing">Edit</a>
+                  <form id="deleteProductForm" method="POST" action="/products/<%= product.product_id %>?_method=DELETE" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+              <% } %>
+          </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Add new product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
+        </div>
+        <div class="modal-body">
+          <!-- Add Product Form -->
+          <form id="addProductForm" method="POST" action="/products" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="name">Product name:</label>
+              <input type="text" class="form-control" id="name" name="productname" required>
+            </div>
+            <div class="form-group">
+              <label for="import_price">Import price:</label>
+              <input type="text" class="form-control" id="import_price" name="importprice" required>
+            </div>
+            <div class="form-group">
+              <label for="retail_price">Retail price:</label>
+              <input type="text" class="form-control" id="retail_price" name="retailprice" required>
+            </div>
+            <div class="form-group">
+              <label for="manufacturer">Manufacturer:</label>
+              <select id="manufacturer" name="manufacturer" class="form-select form-select-sm">
+                  <option value="Apple">Apple</option>
+                  <option value="Samsung">Samsung</option>
+                  <option value="Nokia">Nokia</option>
+                  <option value="Oppo">Oppo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="category">Category:</label>
+              <select id="category" name="category" class="form-select form-select-sm">
+                  <option value="Phone">Phone</option>
+                  <option value="Earphone">Earphone</option>
+                  <option value="Charging">Charger</option>
+                  <option value="Apple">Apple</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="image">Product image:</label>
+              <input type="file" class="form-control form-control-sm" id="image" name="image" >
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Add new product</button>
+          </form>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Include Bootstrap JS and Popper.js -->
+  <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+  <!-- Include your custom script (e.g., admin.js) -->
+  <!-- <script src="js/admin.js"></script> -->
+</body>
+</html>

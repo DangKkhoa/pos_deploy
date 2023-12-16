@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Management</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="/css/styles.css"> -->
+</head>
+<body>
+  <%- include('navbar') %>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2>Product</h2>
+      </div>
+      <div class="card-body">
+        
+      <div class="card-body">
+        <div class="row">
+          <form action="/updateproducts/update-product" method="POST" enctype="multipart/form-data" class="mt-4">
+            <img src="/images/<%= product.image %>" alt="Product image">
+                    <div class="form-group">
+                        <label for="editImage">Update Product Image:</label>
+                        <input type="file" id="image" name="image" accept="image/*" class="form-control-file">
+                    </div>
+                    <div class="form-group">
+                      <label for="editProductname">Product Name:</label>
+                      <input type="text" id="editProductname" name="editProductname" class="form-control" value="<%= product.product_name %>" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="editImportprice">Import price:</label>
+                      <input type="text" id="editImportprice" name="editImportprice" class="form-control" value="<%= product.import_price %>" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="editRetailprice">Retail price:</label>
+                      <input type="username" id="editRetailprice" name="editRetailprice" class="form-control" value="<%= product.retail_price %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editManufacturer">Manufacturer:</label>
+                        <select id="editManufacturer" name="editManufacturer" class="form-control" value="<%= product.manufacturer %>" required>
+                            <option value="Apple">Apple</option>
+                            <option value="Samsung">Samsung</option>
+                            <option value="Nokia">Nokia</option>
+                            <option value="Oppo">Oppo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCategory">Category:</label>
+                        <select id="editCategory" name="editCategory" class="form-control" value="<%= product.category %>" required>
+                            <option value="Phone">Phone</option>
+                            <option value="Earphone">Earphone</option>
+                            <option value="Charging">Charger</option>
+                            <option value="Apple">Apple</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update product</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

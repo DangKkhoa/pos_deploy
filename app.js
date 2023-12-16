@@ -2,6 +2,7 @@
 const express = require('express');
 const session = require('express-session')
 const nocache = require('nocache')
+const methodOverride = require('method-override');
 const transactionRouter = require('./router/transactionRouter')
 const loginRouter = require('./router/loginRouter')
 const logoutRouter = require('./router/logoutRouter')
@@ -12,14 +13,15 @@ const setPasswordRouter = require('./router/setPasswordRouter')
 const profileRouter = require('./router/profileRouter')
 const fistTimeLoginMiddleware = require('./middlewares/firstTimeLoginMiddleware')
 const saleHistoryRouter = require('./router/saleHistoryRouter')
-const statistiscRouter = require('./router/statisticsRouter')
 const generDataModel = require('./model/general/genralModel')
+const viewProductRouter = require('./router/viewProductRouter');
+const updateProductRouter = require('./router/updateProductRouter')
 require('dotenv').config()
 const port = process.env.PORT 
 const app = express();
 app.set('view engine', 'ejs')
 
-
+app.use(methodOverride('_method'));
 
 app.use(session({
   secret: 'hello',
@@ -46,8 +48,8 @@ app.use('/logout', logoutRouter)
 app.use('/set_password', setPasswordRouter)
 app.use('/profile', fistTimeLoginMiddleware, profileRouter)
 app.use('/sale_history', fistTimeLoginMiddleware, saleHistoryRouter)
-app.use('/statistics', statistiscRouter)
-
+app.use('/products', viewProductRouter);
+app.use('/updateproducts', updateProductRouter)
 app.get('/', (req, res) => {
 
   if(!req.session.user) {

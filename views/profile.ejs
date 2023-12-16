@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -26,32 +26,81 @@ button {
     margin-top: 10px;
 }
 
+.button-spacing {
+  margin-top: 2px;
+}
+
+.button-home {
+  margin-top: 2px;
+}
+
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="correct-integrity-value" crossorigin="anonymous">
 
 </head>
 <body>
+  <%- include('navbar') %>
   <div class="container">
     <div class="card">
       <div class="card-header">
         <h2>My Profile</h2>
       </div>
       <div class="card-body">
+        <% if (success) { %>
+          <div class="alert alert-success" role="alert">
+            Profile updated successfully!
+          </div>
+        <% } %>
+      <div class="card-body">
         <div class="row">
-          <form action="/profile/update-avatar" method="post" enctype="multipart/form-data" class="mt-4">
-            <img src="/images/profile/<%= user.profile_picture %>" alt="User Avatar">
+          <form action="/profile/update-profile" method="post" enctype="multipart/form-data" class="mt-4">
+            <div class="picture-profile" style="width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 10px auto; border: 3px solid black">
+              <img src="/images/profile/<%= user.profile_picture  %>" alt="User Avatar" style="width: 100%; height: 100%; border-radius: 50%;">
+            </div>
             <div class="form-group">
                 <label for="avatar">Update Avatar:</label>
                 <input type="file" id="avatar" name="avatar" accept="image/*" class="form-control-file">
             </div>
-            <button type="submit" class="btn btn-primary">Update Avatar</button>
-          </form>        
+            <div class="form-group">
+              <label for="fullname">Full Name:</label>
+              <input type="text" id="fullname" name="fullname" class="form-control" value="<%= user.fullname %>" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" class="form-control" value="<%= user.email %>" required>
+            </div>
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="username" id="username" name="username" class="form-control" value="<%= user.username %>" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Phone:</label>
+              <input type="tel" id="phone" name="phone" class="form-control" value="<%= user.phone %>" pattern="[0-9]{10}">
+            </div>
+            <!-- <form action="/profile/update-password" method="post" class="mt-4">
+              Use PUT method for password update 
+              <input type="hidden" name="_method" value="PUT">
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Update Password</button>
+            </form> -->
+            
+            <button type="submit" class="btn btn-primary button-spacing">Update</button>
+
+            <a href="/" class="btn btn-secondary button-home">Home</a>
+          </form>    
+            
         </div>
       </div>
-    </div>
-  </div>
-
+    </div>   
+  </div> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="correct-integrity-value" crossorigin="anonymous">
 
 </body>
-</html>
+</html> 

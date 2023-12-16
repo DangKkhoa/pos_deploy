@@ -3,7 +3,9 @@ const salepersonData = require('../model/account/accountModel')
 const con = require('../database/db')
 const bcrypt = require('bcrypt')
 const app = express.Router()
+const jwt = require('jsonwebtoken')
 const saltRounds = 10;
+const nodemailer = require('nodemailer')
 app.get('/', (req, res) => {
 
     const sql = 'SELECT * FROM Users'
@@ -49,6 +51,40 @@ app.post('/add', (req, res) => {
                   res.status(500).json({ error: 'Internal Server Error' });
                   return 
                 } else {
+                    var transporter = nodemailer.createTransport({
+                      service: 'gmail',
+                      port: 465,
+                      // host: 'send email',
+                      secure: true,
+                      logger: true,
+                      auth: {
+                        user: 'dangkkhoa10a8@gmail.com',
+                        pass: 'yoeacnmsuniakxzw', // how to have this pass: Login GG account => manage => search for "app passwords"  => create and copy the pass to here and we good to go
+                      },
+                      tls: {
+                        rejectUnauthorized: true
+                      }
+                    });
+
+                    var homepageLink = 'http://pos-system.store:8080';
+                    var mailOptions = {
+                      from: 'dkkhoa10a8@gmail.com',
+                      to: email,
+                      subject: 'From admin',
+                      text: `Your account has now been created`,
+                      html: `<h1>Welcome! Your account has been created</h1>
+                     <a href="${homepageLink}">${homepageLink}</a>`
+                    };
+
+                    transporter.sendMail(mailOptions, function(error, info){
+                      if (error) {
+                        res.redirect('/salespersons')
+                        console.log(error);
+                      } else {
+                        console.log('Email sent: ' + info.response);
+                      }
+                      return 
+                    });
                     res.redirect('/salespersons')
                     return 
                 }

@@ -1,6 +1,5 @@
-//app.js
+
 const express = require('express');
-const port = 8080;
 const session = require('express-session')
 const nocache = require('nocache')
 const transactionRouter = require('./router/transactionRouter')
@@ -15,7 +14,8 @@ const fistTimeLoginMiddleware = require('./middlewares/firstTimeLoginMiddleware'
 const saleHistoryRouter = require('./router/saleHistoryRouter')
 const statistiscRouter = require('./router/statisticsRouter')
 const generDataModel = require('./model/general/genralModel')
-
+require('dotenv').config()
+const port = process.env.PORT 
 const app = express();
 app.set('view engine', 'ejs')
 
@@ -88,6 +88,6 @@ app.get('/', (req, res) => {
 
 
 
-app.listen(8080, () => {
-  console.log(`Server is running at http://localhost:8080`);
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });

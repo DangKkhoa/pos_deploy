@@ -53,7 +53,6 @@
             }
             .card-container .card {
                 /* height: 100%; */
-                background-color: red;
                 width: 12rem;
                 font-size: 18px;
                 
@@ -108,7 +107,7 @@
             <div class="logout"><div><a href="/logout" class=""><i class="fa-solid fa-right-from-bracket"></i> Log out</a></div></div>
         </div>
     </header>
-    <div class="container-fluid w-100 d-flex flex-column " style="padding: 0 10px; position: relative; height: calc(100vh - 150px);" >
+    <div class="container-fluid w-100 d-flex flex-column justify-content-between" style="padding: 0 10px; position: relative; height: calc(100vh - 150px);" >
         <div class="header d-flex" style="gap: 12px;">
             <div class="card-container", style=" gap: 5px">
                 <% if(user.is_admin) { %>

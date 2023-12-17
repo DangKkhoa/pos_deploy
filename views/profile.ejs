@@ -42,16 +42,14 @@ button {
   <%- include('navbar') %>
   <div class="container">
     <div class="card">
-      <div class="card-header">
-        <h2>My Profile</h2>
-      </div>
+      <% if (success) { %>
       <div class="card-body" id="success-box">
-        <% if (success) { %>
+        
           <div class="alert alert-success" role="alert">
             Profile updated successfully!
           </div>
-        <% } %>
       </div>
+      <% } %>
       <div class="card-body">
         <div class="row">
           <form action="/profile/update-profile" method="post" enctype="multipart/form-data" class="mt-4">

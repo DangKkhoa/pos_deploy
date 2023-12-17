@@ -4,7 +4,7 @@ const multer = require('multer');
 const con = require('../database/db');
 const path = require('path');
 const app = express.Router();
-
+// const popup = require('popups')
 //const storage = multer.memoryStorage();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -69,36 +69,49 @@ app.post('/', upload.single('image'), (req, res) => {
     });
 });
 
-app.delete('/:id', ({ params: { id } }, res) => {
-    const deleteProductSql = 'DELETE FROM Products WHERE product_id = ?';
-    con.query(deleteProductSql, [id], (deleteErr, deleteResult) => {
-        if (deleteErr) {
-            console.error(deleteErr);
-            return res.status(500).json({ error: 'Internal Server Error' });
-        }
-
-        // After deleting the product, update the product IDs for the remaining products
-        const setCountSql = 'SET @count = 0;';
-        const updateProductIdsSql = 'UPDATE Products SET product_id = @count:= @count + 1;';
-        
-        // Execute the statements one by one
-        con.query(setCountSql, (setCountErr, setCountResult) => {
-            if (setCountErr) {
-                console.error(setCountErr);
+app.delete('/:id', async ({ params: { id } }, res) => {
+    const promise_con = con.promise()
+    const [result] = await promise_con.query('SELECT * FROM Sale_Details WHERE product_id = ?', [id])
+    console.log(result.length)
+    if(result.length < 1) {
+        const deleteProductSql = 'DELETE FROM Products WHERE product_id = ?';
+        con.query(deleteProductSql, [id], (deleteErr, deleteResult) => {
+            if (deleteErr) {
+                console.error(deleteErr);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
 
-            con.query(updateProductIdsSql, (updateErr, updateResult) => {
-                if (updateErr) {
-                    console.error(updateErr);
+            // After deleting the product, update the product IDs for the remaining products
+            const setCountSql = 'SET @count = 0;';
+            const updateProductIdsSql = 'UPDATE Products SET product_id = @count:= @count + 1;';
+
+            // Execute the statements one by one
+            con.query(setCountSql, (setCountErr, setCountResult) => {
+                if (setCountErr) {
+                    console.error(setCountErr);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
 
-                // Redirect or respond as needed
-                res.redirect('/products');
+                con.query(updateProductIdsSql, (updateErr, updateResult) => {
+                    if (updateErr) {
+                        console.error(updateErr);
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                    }
+
+                    // Redirect or respond as needed
+                    res.redirect('/products');
+                });
             });
         });
-    });
+
+        return 
+    }
+
+    res.send(`
+        <h1>Cannot delete product !</h1>
+        <a href="/products">Click here to go back</a>
+    `)
+
 });
 
 module.exports = app;

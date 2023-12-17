@@ -7,7 +7,6 @@ const transactionRouter = require('./router/transactionRouter')
 const loginRouter = require('./router/loginRouter')
 const logoutRouter = require('./router/logoutRouter')
 const loginMiddleware = require('./middlewares/loginMiddleware')
-// const clickLinkGmailMiddleware = require('./middlewares/clickLinkGmailMiddleware')
 const salespersonRouter = require('./router/salespersonRouter')
 const setPasswordRouter = require('./router/setPasswordRouter')
 const profileRouter = require('./router/profileRouter')
@@ -21,6 +20,7 @@ const firstloginRouter = require('./router/firstloginRouter')
 require('dotenv').config()
 const port = process.env.PORT || 8080
 const app = express();
+const con = require('./database/db')
 app.set('view engine', 'ejs')
 
 app.use(methodOverride('_method'));
@@ -39,10 +39,6 @@ app.use('/first_login', firstloginRouter)
 //user must login to use the system
 app.use('/login', loginRouter)
 
-// app.use(clickLinkGmailMiddleware)
-//middleware to check if user logged in or not
-// app.use(loginMiddleware)
-
 
 app.use('/transaction', loginMiddleware, fistTimeLoginMiddleware, transactionRouter)
 app.use('/salespersons', loginMiddleware, salespersonRouter)
@@ -53,20 +49,29 @@ app.use('/sale_history', loginMiddleware, fistTimeLoginMiddleware, saleHistoryRo
 app.use('/products', loginMiddleware, viewProductRouter);
 app.use('/updateproducts', loginMiddleware, updateProductRouter)
 
+app.get('/customers', loginMiddleware, (req, res) => {
+  con.query('SELECT * FROM Customers', (err, result) => {
+    if(err) {
+      console.log(err)
+    }
+    else {
+      res.render('customers', {customers: result, user: req.session.user})
+    }
+  })
+})
 app.get('/', (req, res) => {
 
   if(!req.session.user) {
     return res.redirect('/login')
   }
   const user = req.session.user
-  console.log(user)
   if(user.is_admin) {
     generDataModel.getGeneralData()
     .then(data => {
-      // console.log(data)
+
       generDataModel.getTop5Products() 
       .then(products => {
-        console.log(products)
+
         res.render('home', {user: user, general_data: data, top5_products: products})
         return 
       })
@@ -80,8 +85,7 @@ app.get('/', (req, res) => {
   .then(data => {
     generDataModel.getTop5Products() 
     .then(products => {
-      console.log(products)
-      console.log(data)
+
       res.render('home', {user: user, general_data: data, top5_products: products})
       return 
     })
@@ -91,9 +95,45 @@ app.get('/', (req, res) => {
   .catch(err => console.log(err))
 })
 
+app.get('/', (req, res) => {
+  // Extract the registered information from query parameters, if available
+  const { name, phone, address } = req.query;
 
+  res.render('test.ejs', { name: name || '', phone: phone || '', address: address || '' });
+});
 
+// Define a route to handle AJAX request for retrieving data
+app.post('/retrieve-data', (req, res) => {
+  const phone = req.body.phone;
 
+  // Execute a SQL query to retrieve name and address based on phone number
+  const query = 'SELECT name, address FROM customers WHERE phone = ?';
+  connection.query(query, [phone], (error, results) => {
+    if (error) throw error;
+
+    // Send the retrieved data as a response
+    if (results.length > 0) {
+      const { name, address } = results[0];
+      res.json({ name, address });
+    } else {
+      res.json({ name: '', address: '' });
+    }
+  });
+});
+
+// Define a route to handle registration form submission
+app.post('/register', (req, res) => {
+    const { newName, newPhone, newAddress } = req.body;
+  
+    // Execute a SQL query to insert the new account information
+    const query = 'INSERT INTO customers (name, phone, address) VALUES (?, ?, ?)';
+    connection.query(query, [newName, newPhone, newAddress], (error) => {
+      if (error) throw error;
+  
+      // Redirect back to the main form with the registered information
+      res.redirect(`/?name=${encodeURIComponent(newName)}&phone=${encodeURIComponent(newPhone)}&address=${encodeURIComponent(newAddress)}`);
+    });
+  });
 
 
 

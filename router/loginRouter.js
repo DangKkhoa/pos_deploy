@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
 app.post('/',  (req, res) => {
     const { username, password } = req.body;
     let error_msg = ''
-    console.log(username, password)
         // Fetch the hashed password from the database
         const selectQuery = 'SELECT * FROM Users WHERE username = ?';
         const param = [username]

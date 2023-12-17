@@ -192,21 +192,19 @@ document.addEventListener('DOMContentLoaded',  () => {
             change_to_customer: change_value
         }
 
-        fetch('http://localhost:8080/transaction/processing', {
+        fetch('http://pos-system.store:8080/transaction/processing', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(saleData)
         })
-        // .then(res => res.json())
+        .then(res => res.json())
         .then(data => {
             console.log(data)
-
-                if(data.ok) {
+                if(data.code === 0) {
                     completePayment()
-                    window.location.href = data.url
-
+                    window.location.href = 'http://localhost:8080/transaction/processing?complete=true'
                 }
             })
         .catch(error => console.log(error))

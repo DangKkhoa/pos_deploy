@@ -136,7 +136,7 @@ app.post('/processing', (req, res) => {
                         return
                     }
                     else {
-                        console.log('Added successfully')
+                        // console.log('Added successfully')
                         resolve()
                     }
                 })
@@ -197,11 +197,12 @@ app.post('/processing', (req, res) => {
 
             doc.end()
             stream.on('finish', () => {
-                console.log(`Invoice with id ${sale_id} printed successfully`)
+                console.log(`Invoice with id ${sale_id} printed successfully to ${__dirname + '/invoices'}`)
             })
 
+            res.json({code: 0, message: 'Trasaction has been stored', sale_id: sale_id})
             
-            res.redirect('/transaction/processing?complete=true')
+            // res.redirect('/transaction/processing?complete=true')
         })
         .catch(err => {
             console.log(err)

@@ -54,7 +54,7 @@
 
   <%- include('navbar') %>
   <% if (success) { %>
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success" role="alert" id="success-box">
       Product updated successfully!
     </div>
   <% } %>
@@ -171,5 +171,16 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
   <!-- Include your custom script (e.g., admin.js) -->
   <!-- <script src="js/admin.js"></script> -->
+  <script>
+    const success_box = document.getElementById('success-box')
+        let sec = 2
+        const interval = setInterval(function() {
+            sec--
+            if(sec < 0) {
+                clearInterval(interval)
+                success_box.style.display = 'none'
+            }
+        }, 1000)
+  </script>
 </body>
 </html>

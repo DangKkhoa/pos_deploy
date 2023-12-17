@@ -20,8 +20,6 @@
             <a href="/" class="url"><i class="fa-solid fa-house"></i> Home</a>
             <% if(user.is_admin === 1) { %>
                 <a href="/transaction" class="product-management url"><i class="fa-solid fa-cart-plus"></i> New Transaction</a>
-                <a href="/products" class="product-management url"><i class="fa-solid fa-bag-shopping"></i> Products</a>
-                
                 <a class="url" href="/sale_history"><i class="fa-solid fa-clock-rotate-left"></i> Sale History</a>
                 <a class="url" href="/salespersons"><i class="fa-solid fa-users"></i> Salespersons</a>
                 <a href="/customers" class="url"><i class="fa-solid fa-user-group"></i> Customers</a>
@@ -29,6 +27,7 @@
                 <a href="/transaction" class="product-management url"><i class="fa-solid fa-cart-plus"></i> Transaction</a>
                 <a class="url" href="/sale_history"><i class="fa-solid fa-clock-rotate-left"></i> Sale history</a>
             <% } %>
+                <a href="/products" class="product-management url"><i class="fa-solid fa-bag-shopping"></i> Products</a>
             <div class="link-container">
                 <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
             </div>

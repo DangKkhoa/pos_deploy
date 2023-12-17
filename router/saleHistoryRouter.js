@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
         saleModel.getAllSaleData(record_per_page, offset)
         .then((sales) => {
             const total_pages = Math.ceil(sales.total_orders / record_per_page)
-            res.render('salehistory', {sales: sales.result, total_revenue: sales.sale_total.total_revenue, total_quantity_sold: sales.sale_total.total_quantity_sold, user: req.session.user, total_order: sales.total_count, total_pages: total_pages, current_page: page, filter: false, total_orders: sales.total_orders})
+            res.render('salehistory', {sales: sales.result, total_revenue: sales.sale_total.total_revenue, total_quantity_sold: sales.sale_total.total_quantity_sold, user: req.session.user, total_order: sales.total_count, total_pages: total_pages, current_page: page, filter: false, total_orders: sales.total_orders, record_per_page: record_per_page})
         })
         .catch(err => res.send(err))
         return 
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
     .then((sales) => {
         const total_pages = Math.ceil(sales.total_orders / record_per_page)
         console.log(sales)
-        res.render('salehistory', {sales: sales.result, total_revenue: sales.sale_total.total_revenue, total_quantity_sold: sales.sale_total.total_quantity_sold, user: req.session.user, total_order: sales.total_count, total_pages: total_pages, current_page: page, filter: false, total_orders: sales.total_orders})
+        res.render('salehistory', {sales: sales.result, total_revenue: sales.sale_total.total_revenue, total_quantity_sold: sales.sale_total.total_quantity_sold, user: req.session.user, total_order: sales.total_count, total_pages: total_pages, current_page: page, filter: false, total_orders: sales.total_orders, record_per_page: record_per_page})
     })
     .catch(err => console.log(err))
 

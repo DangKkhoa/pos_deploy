@@ -142,6 +142,8 @@ ul {
 }
     
 .container .product-order {
+    /* display: none; */
+    transition: 1s;
     position: relative;
     height: 100%;
     padding: 10px;
@@ -154,6 +156,7 @@ ul {
     /* display: flex; */
     /* flex-direction: column; */
     /* justify-content: space-between; */
+    overflow-x: hidden;
 }
 
 

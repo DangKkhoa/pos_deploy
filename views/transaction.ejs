@@ -10,9 +10,42 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,100;1,300&display=swap" rel="stylesheet">
+    <style>
+        #btn-open-order {
+            display: none;
+            float: right;
+            position: relative;
+            top: 20px;
+            right: 10px;
+            padding: 10px 5px; 
+            border-radius: 10px;
+            border: none;
+            background-color: #31d2f2;
+        }
+    #btn-open-order:hover {
+        cursor: pointer;
+    }
+        @media screen and (max-width: 1000px) {
+            .container #toggle-product-order {
+                display: none;
+            }
+            #btn-open-order {
+                display: block;
+            }
+
+            .container .product-order .cart-process .cart-buttons #clear-cart{
+                padding: 20px
+            }
+            .container .product-order .cart-process .cart-buttons #complete-payment {
+                padding: 20px
+            }
+        }
+
+    </style>
     </head>
     <body>
         <%- include('navbar') %>
+        <button id="btn-open-order">Open order <span style="margin-left: 5px; background-color: #ffca2c; padding: 4px 10px; border-radius: 50%;" class="total-quantity-current" >0</span></button>
         <header>
             <div class="product-search" >
                 <form action="/transaction" method="GET">
@@ -33,75 +66,93 @@
                     
                 </ul>
             
-            <div class="product-grid">
-                
-                <div class="product-grid-item">
-                    <% products.forEach(p => { %>
-                        <div class="product-item" data-id="<%= p.product_id %>" data-price="<%= p.retail_price %>" data-name="<%= p.product_name %>">
-                            <img src="/images/<%=p.image %>" alt="">
-                            <div>
-                                <p style="text-align: center;" class="product-name" ><%= p.product_name %></p>
-                                <p style="text-align: center;" class="product-name" ><%= p.retail_price %>$</p>
+                <div class="product-grid">
+
+                    <div class="product-grid-item">
+                        <% products.forEach(p => { %>
+                            <div class="product-item" data-id="<%= p.product_id %>" data-price="<%= p.retail_price %>" data-name="<%= p.product_name %>">
+                                <img src="/images/<%=p.image %>" alt="">
+                                <div>
+                                    <p style="text-align: center;" class="product-name" ><%= p.product_name %></p>
+                                    <p style="text-align: center;" class="product-name" ><%= p.retail_price %>$</p>
+                                </div>
                             </div>
-                        </div>
-                    <% }) %>
-                </div>
-                
-            </div>
-                
-                            
-            <div class="product-order">
-                <div class="product-order-header">
-                    <h1>YOUR ORDER</h1>
-                    <h3>#<%= sale_id %></h3>
-                    <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20" autocomplete="off"></p>
-                    <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
-                    <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
-                </div>
-                <hr>
+                        <% }) %>
+                    </div>
 
-                <div class="product-selected">
-                
-                        <table class="selected-detail" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50%">Name</th>
-                                    <th>Quantity</th>
-                                    <th style="width: 20%;">Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-table-body">
-
-                            </tbody>
-
-                            <tfoot>
-                                <tr style="background-color: #c2c2c2;">
-                                    
-                                    <!-- <td id="total-quantity" >0</td>
-                                    <td id="total-cost">0</td> -->
-                                </tr>
-                            </tfoot>
-                        </table>
                 </div>
-                <div class="total-payment">
+
+
+                <div class="product-order" id="toggle-product-order">
+                    <div class="product-order-header">
+                        <h1>YOUR ORDER</h1>
+                        <h3>#<%= sale_id %></h3>
+                        <p>Name:<input type="text" id="nameInput" name="name" style="border: none; outline: none; padding: 4px" oninput="validateName()" maxlength="20" autocomplete="off"></p>
+                        <p>Phone:<input type="tel" id="phoneNumberInput" name="phone" style="border: none; outline: none; padding: 4px" oninput="validatePhoneNumber()" maxlength="11" autocomplete="off"></p>
+                        <p>Date: <input type="text" id="dateInput" style="border: none; outline: none; padding: 4px" readonly></p>
+                    </div>
+                    <hr>
+
+                    <div class="product-selected">
                     
-                    <div><strong>Total quantity</strong>: <span id="total-quantity">0</span></div>
-                    <div><strong>Total cost</strong>: <span id="total-cost">0</span></div>
-                    <div><strong>Customer gives: </strong><input type="number" id="customerPay"></div>
-                    <div><strong>Change: </strong><span id="changeToCustomer">0</span></div>
-                </div>
-                <div class="cart-process">
-                    <div class="cart-buttons">
-                        <button id="clear-cart">Clear <i class="fa-regular fa-trash-can"></i></button>
-                        <button id="complete-payment">Confirm <i class="fa-solid fa-check"></i></button>
-                    </div> 
+                            <table class="selected-detail" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50%">Name</th>
+                                        <th>Quantity</th>
+                                        <th style="width: 20%;">Price</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-table-body">
+
+                                </tbody>
+
+                                <tfoot>
+                                    <tr style="background-color: #c2c2c2;">
+
+                                        <!-- <td id="total-quantity" >0</td>
+                                        <td id="total-cost">0</td> -->
+                                    </tr>
+                                </tfoot>
+                            </table>
+                    </div>
+                    <div class="total-payment">
+
+                        <div><strong>Total quantity</strong>: <span id="total-quantity">0</span></div>
+                        <div><strong>Total cost</strong>: <span id="total-cost">0</span></div>
+                        <div><strong>Customer gives: </strong><input type="number" id="customerPay"></div>
+                        <div><strong>Change: </strong><span id="changeToCustomer">0</span></div>
+                    </div>
+                    <div class="cart-process">
+                        <div class="cart-buttons">
+                            <button id="clear-cart">Clear <i class="fa-regular fa-trash-can"></i></button>
+                            <button id="complete-payment">Confirm <i class="fa-solid fa-check"></i></button>
+                        </div> 
+                    </div>
                 </div>
             </div>
         </main>
     </body>
 
     <script>
+        const btn_open_order = document.getElementById('btn-open-order')
+        const product_order = document.getElementById('toggle-product-order')
+        btn_open_order.addEventListener('click', toggleOrder)
+        // product_order.style.display = 'none'
+        function toggleOrder() {
+            console.log('click')
+            console.log(product_order.style.display)
+            if(product_order.style.display == 'none' || !product_order.style.display) {
+
+                product_order.style.display = 'block'
+                product_order.style.width = '350px'
+            }
+            else {
+                
+                product_order.style.display = 'none'
+            }
+        }
     // /This function is for "Phone" to receive only numbers
         function validatePhoneNumber() {
         // Get the input element

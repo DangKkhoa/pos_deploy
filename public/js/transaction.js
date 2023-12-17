@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded',  () => {
     
     const product_items = document.querySelectorAll('.product-item');
@@ -5,6 +6,7 @@ document.addEventListener('DOMContentLoaded',  () => {
     const total_quantity_element = document.getElementById('total-quantity')
     const total_cost_element = document.getElementById('total-cost')
     let customer_pay = document.getElementById('customerPay')
+    let total_quantity_current = document.getElementsByClassName('total-quantity-current')[0]
 
     let change_value = 0
     let customer_pay_value = 0
@@ -114,6 +116,7 @@ document.addEventListener('DOMContentLoaded',  () => {
         if(selected_products.size === 0) {
             total_quantity_element.textContent = 0;
             total_cost_element.textContent = 0;
+            total_quantity_current.textContent = 0
         }
         else {
             selected_products.forEach(item => {
@@ -121,6 +124,7 @@ document.addEventListener('DOMContentLoaded',  () => {
                 total_cost += item.price * item.quantity;
                 total_quantity_element.textContent = total_quantity;
                 total_cost_element.textContent = total_cost;
+                total_quantity_current.textContent = total_quantity
             })
         }
         

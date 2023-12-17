@@ -36,21 +36,21 @@
 <body>
     <% if(transaction_complete === 'true') { %>
         <div class="alert alert-success">
-            <p><i class="fa-regular fa-circle-check"></i></p>
-            <p style="margin-bottom: 5px;">Your transaction has been stored. Hope to see you next tiem. Thank you <i class="fa-regular fa-face-smile-beam"></i></p>
-            <p>Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
+            <p class="h5 mb-2"><i class="fa-regular fa-circle-check"></i></p>
+            <p class="h5 mb-2" style="margin-bottom: 5px;">Your transaction has been stored. Hope to see you next tiem. Thank you <i class="fa-regular fa-face-smile-beam"></i></p>
+            <p class="h5">Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
         </div>
     <% } else { %>
         <div class="alert alert-danger">
-            <p><i class="fa-regular fa-circle-check"></i></p>
-            <p style="margin-bottom: 5px;">Cannot process your transaction. Please try again later <i class="fa-solid fa-face-frown"></i></p>
-            <p>Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
+            <p class="h5"><i class="fa-regular fa-circle-check"></i></p>
+            <p class="h5" style="margin-bottom: 5px;">Cannot process your transaction. Please try again later <i class="fa-solid fa-face-frown"></i></p>
+            <p class="h5">Redreicting to <a href="/transaction">transaction page</a> in <span id="count-down">3</span></p>
         </div>
     <% } %>
     <script>
         const count_down = document.getElementById('count-down')
 
-        let sec = 3
+        let sec = 2
         const interval = setInterval(function() {
             count_down.innerHTML = sec
             sec--

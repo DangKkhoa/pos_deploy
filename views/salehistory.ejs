@@ -75,14 +75,18 @@
                 <% let i = 1 %>
                 <% sales.forEach(s => { %>
                     <tr>
-                        <td><%= i++ %></td>
+                        <% if(!filter) { %>
+                            <td><%= current_page * record_per_page - (record_per_page - i++) %></td>
+                        <% } else { %>
+                            <td><%= i++ %></td>
+                        <% } %>
                         <td><a href="/sale_history/detail?sale_id=<%= s.sale_id %>"><%= s.sale_id %></a></td>
                         <td><%= s.total_quantity %></td>
                         <td><%= s.total_price %></td>
                         <td><%= s.amount_given_by_customer %></td>
                         <td><%= s.change_to_customer %></td>
                         <td><%= s.fullname %></td>
-                        <td><%= s.sale_date %></td>
+                        <td><%= s.sale_date.toLocaleDateString('en-GB') %></td>
                         <td><%= s.sale_time %></td>
                     </tr>
                 <% }) %>

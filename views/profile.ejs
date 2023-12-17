@@ -45,12 +45,13 @@ button {
       <div class="card-header">
         <h2>My Profile</h2>
       </div>
-      <div class="card-body">
+      <div class="card-body" id="success-box">
         <% if (success) { %>
           <div class="alert alert-success" role="alert">
             Profile updated successfully!
           </div>
         <% } %>
+      </div>
       <div class="card-body">
         <div class="row">
           <form action="/profile/update-profile" method="post" enctype="multipart/form-data" class="mt-4">
@@ -78,18 +79,7 @@ button {
               <label for="phone">Phone:</label>
               <input type="tel" id="phone" name="phone" class="form-control" value="<%= user.phone %>" pattern="[0-9]{10}">
             </div>
-            <!-- <form action="/profile/update-password" method="post" class="mt-4">
-              Use PUT method for password update 
-              <input type="hidden" name="_method" value="PUT">
-                <label for="currentPassword">Current Password:</label>
-                <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label for="newPassword">New Password:</label>
-                <input type="password" id="newPassword" name="newPassword" class="form-control" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Update Password</button>
-            </form> -->
+            
             
             <button type="submit" class="btn btn-primary button-spacing">Update</button>
 
@@ -101,6 +91,19 @@ button {
     </div>   
   </div> 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="correct-integrity-value" crossorigin="anonymous">
+  <script>
+    const success_box = document.querySelector('#success-box')
 
+    let sec = 1
+    const interval = setInterval(function() {
+        sec--
+
+        if(sec < 0) {
+          clearInterval(interval)
+          success_box.style.display = 'none'
+          // window.location.href = '/profile'
+        }
+    }, 1000)
+  </script>
 </body>
 </html> 

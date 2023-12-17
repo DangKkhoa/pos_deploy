@@ -19,7 +19,7 @@
 
         .card-container {
             display: flex;
-            height: 50%;
+            height: 150px;
         }
 
         .card {
@@ -195,6 +195,7 @@
                                 <th>Quantity</th>
                             </tr>
                         </thead>
+                        <% if(!user.first_login || user.is_admin) { %>
                         <tbody>
                             <% let i = 1 %>
                                 <% top5_products.forEach(p => { %>
@@ -235,6 +236,7 @@
                             <td></td>
                         </tr> -->
                         </tbody>
+                        <% } %>
                     </table>
                 </div>
             </div>

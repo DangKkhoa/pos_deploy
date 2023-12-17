@@ -71,7 +71,7 @@
                     <div class="product-grid-item">
                         <% products.forEach(p => { %>
                             <div class="product-item" data-id="<%= p.product_id %>" data-price="<%= p.retail_price %>" data-name="<%= p.product_name %>">
-                                <img src="/images/<%=p.image %>" alt="">
+                                <img src="/images/products/<%=p.image %>" alt="">
                                 <div>
                                     <p style="text-align: center;" class="product-name" ><%= p.product_name %></p>
                                     <p style="text-align: center;" class="product-name" ><%= p.retail_price %>$</p>

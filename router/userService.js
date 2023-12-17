@@ -8,7 +8,7 @@ async function updateUserProfile(userId, avatarPath, userData, con) {
     const { fullname, email, username, phone } = userData;
 
     // Update user profile in the database
-    await con.execute(
+    con.promise().query(
       'UPDATE Users SET fullname = ?, email = ?, profile_picture = ?, username = ?, phone = ? WHERE user_id = ?',
       [fullname, email, avatarPath, username, phone, userId]
     );

@@ -1,5 +1,4 @@
 const express = require('express')
-const salepersonData = require('../model/account/accountModel')
 const con = require('../database/db')
 const bcrypt = require('bcrypt')
 const app = express.Router()
@@ -38,14 +37,17 @@ app.post('/add', (req, res) => {
         return 
     })
 
-    const sql = 'INSERT INTO Users (username, password, email, fullname, is_admin, is_locked) VALUES (?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO Users (username, password, email, fullname, is_admin, is_locked, token) VALUES (?, ?, ?, ?, ?, ?, ?)';
     const username = email.split('@')[0] // Username is the part before '@' 
     const password = username // Password is also the username
+    
+    // Token to create 1 minute email
+    const token = jwt.sign({username: username}, 'mat-khau-bi-mat', {expiresIn: 60})
     bcrypt.hash(password, saltRounds, (err, hashed_password) => {
         if(err) {
             alert('Somethig went wrong')
         } else {
-            con.query(sql, [username, hashed_password, email, fullname, 0, 0], (err, result) => {
+            con.query(sql, [username, hashed_password, email, fullname, 0, 0, token], (err, result) => {
                 if (err) {
                   console.error('Error:', err);
                   res.status(500).json({ error: 'Internal Server Error' });
@@ -66,13 +68,16 @@ app.post('/add', (req, res) => {
                       }
                     });
 
-                    var homepageLink = 'http://pos-system.store:8080';
+                    var homepageLink = `http://localhost:8080/first_login?token=${token}`;
                     var mailOptions = {
-                      from: 'dkkhoa10a8@gmail.com',
+                      from: 'dangkkhoa10a8@gmail.com',
                       to: email,
                       subject: 'From admin',
                       text: `Your account has now been created`,
-                      html: `<h1>Welcome! Your account has been created</h1>
+                      html: `<h1 style="color: black">Welcome! Your account has been created</h1>
+                      <p style="color: black"><strong>Username: </strong>${username}</p>
+                      <p style="color: black"><strong>Password: </strong>${username}</p>
+                      <h3><span style="color: red">Note: </span> The link is only valid in 1 minute. After this time, please contact admin to resend another link !</h3>  
                      <a href="${homepageLink}">${homepageLink}</a>`
                     };
 
@@ -124,8 +129,71 @@ app.post('/delete/:salesperson_id', (req, res) => {
 
 })
 
-app.post('/send_link', (req, res) => {
-    
+app.post('/send-link/:salesperson_id',(req, res) => {
+    const salesperson_id = req.params.salesperson_id
+    const sql = 'SELECT * FROM Users WHERE user_id = ?'
+    const param = [salesperson_id]
+
+    con.query(sql, param, async (err, result) => {
+        if(err) {
+            res.json({code: 1, message: "Unable to get user from database"})
+        }
+        else {
+            const promise_con = con.promise()
+            const token = jwt.sign({username: result[0].username}, 'mat-khau-bi-mat', {expiresIn: 60})
+            try {
+                // Update new token after clicking send email button
+                await promise_con.query('UPDATE Users SET token = ? WHERE user_id = ?', [token, salesperson_id])
+
+                // Send email
+                var transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  port: 465,
+                  // host: 'send email',
+                  secure: true,
+                  logger: true,
+                  auth: {
+                    user: 'dangkkhoa10a8@gmail.com',
+                    pass: 'yoeacnmsuniakxzw', // how to have this pass: Login GG account => manage => search for "app passwords"  => create and copy the pass to here and we good to go
+                  },
+                  tls: {
+                    rejectUnauthorized: true
+                  }
+                });
+
+                var homepageLink = `http://localhost:8080/first_login?token=${token}`;
+
+                var mailOptions = {
+                    from: 'dkkhoa10a8@gmail.com',
+                    to: result[0].email,
+                    subject: 'From admin',
+                    text: `Your account has now been created`,
+                    html: `<p><strong>Username: </strong>${result[0].username}</p>
+                    <p><strong>Password: </strong>${result[0].username}</p>
+                    <h3><span style="color: red">Note: </span> The link is valid in 1 minute. After this time, please contact admin to resend another link!</h3>  
+                    <a href="${homepageLink}">${homepageLink}</a>`
+                };
+
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                        res.json({code: 2, message: `Unable to send link to ${result[0].email}`})
+                        console.log(error);
+                        return 
+                    } else {
+                        res.json({code: 0, message: `Link was sent to ${result[0].email}`})
+                        console.log('Email sent: ' + info.response);
+                    }
+                    return 
+                });
+            }
+            catch(err) {
+                console.log(err)
+            }
+            
+        }
+    })
+
+    return 
 })
 
 

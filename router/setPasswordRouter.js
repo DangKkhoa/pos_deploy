@@ -41,13 +41,13 @@ app.post('/', async (req, res) => {
                         res.status(500).json('Internal server error')
                     }
                     else {
-                        con.query('UPDATE Users SET password = ?, first_login = ? WHERE user_id = ?', [hashed_password, 0, user_id], (updateErr, updateResult) => {
+                        con.query('UPDATE Users SET password = ?, first_login = ?, token = ? WHERE user_id = ?', [hashed_password, 0, '', user_id], (updateErr, updateResult) => {
                             if(updateErr) {
                                 console.log('Cannot change password now')
                                 res.status(500).json({ error: 'Internal Server Error' });
                             }
                             else {
-                                // If succeed, set first_login to false
+                                
                                 req.session.user.first_login = 0
                                 res.redirect('/')
                             }

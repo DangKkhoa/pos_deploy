@@ -35,10 +35,6 @@ app.get('/', (req, res) => {
 
 
 app.post('/update-profile', upload.single('avatar'), async (req, res) => {
-  if(!req.file) {
-    res.redirect('/profile')
-    return 
-  }
   try {
     const userId = req.session.user.user_id;
     const userData = {
@@ -48,12 +44,14 @@ app.post('/update-profile', upload.single('avatar'), async (req, res) => {
       phone: req.body.phone,
     };
 
-    let avatarPath = req.session.user.profile; // Default to the current avatar
-
-    if (req.file) {
+    let avatarPath = req.session.user.profile_picture; // Default to the current avatar
+    console.log(req.file)
+    console.log(avatarPath)
+    if (req.file != undefined || req.file != null) {
       // If a file is uploaded, update the avatar
       avatarPath = `${req.file.filename}`;
     }
+    console.log(avatarPath)
 
     await updateUserProfile(userId, avatarPath, userData, con);
 
@@ -64,7 +62,7 @@ app.post('/update-profile', upload.single('avatar'), async (req, res) => {
     req.session.user.email = userData.email;
     req.session.user.username = userData.username;
     req.session.user.phone = userData.phone;
-
+    
     // Redirect to profile with success parameter
     res.redirect('/profile?success=true');
   } catch (error) {

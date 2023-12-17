@@ -8,7 +8,9 @@ const bcrypt = require('bcrypt')
 
 app.get('/', (req, res) => {
     const error = ''
-    // console.log(req.session.user)
+    if(req.user) {
+        return res.send('<h1>Please click the link provided in your email</h1>')
+    }
     if(req.session.user) {
         return res.redirect('/')
     }
@@ -34,11 +36,15 @@ app.post('/',  (req, res) => {
                 // Compare the provided password with the hashed password from the database
                 const passwordMatch = bcrypt.compareSync(password, hashedPassword)
                 if (passwordMatch) {
+
+                    if(selectResult[0].token) {
+                        return res.send('<h1>Please use the link provided in your email</h1>')
+                    }
                     const {password, ...userData} = selectResult[0]
                     req.session.user = userData
                     
                     // If first time log in the system and not admin, redirect to change password
-                    if(selectResult[0].first_login && !selectResult[0].is_admin) {
+                    if(selectResult[0].first_login && !selectResult[0].is_admin && selectResult[0]) {
                         return res.redirect('/set_password')
                     }
                     return res.redirect('/')

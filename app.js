@@ -15,9 +15,11 @@ const fistTimeLoginMiddleware = require('./middlewares/firstTimeLoginMiddleware'
 const saleHistoryRouter = require('./router/saleHistoryRouter')
 const generDataModel = require('./model/general/genralModel')
 const viewProductRouter = require('./router/viewProductRouter');
-const updateProductRouter = require('./router/updateProductRouter')
+const updateProductRouter = require('./router/updateProductRouter');
+const clickLinkGmailMiddleware = require('./middlewares/clickLinkGmailMiddleware');
+const firstloginRouter = require('./router/firstloginRouter')
 require('dotenv').config()
-const port = process.env.PORT 
+const port = process.env.PORT || 8080
 const app = express();
 app.set('view engine', 'ejs')
 
@@ -33,27 +35,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(express.static(__dirname + '/public'));
 
-
+app.use('/first_login', firstloginRouter)
 //user must login to use the system
 app.use('/login', loginRouter)
 
-
+// app.use(clickLinkGmailMiddleware)
 //middleware to check if user logged in or not
-app.use(loginMiddleware)
+// app.use(loginMiddleware)
 
 
-app.use('/transaction', fistTimeLoginMiddleware, transactionRouter)
-app.use('/salespersons', salespersonRouter)
-app.use('/logout', logoutRouter)
-app.use('/set_password', setPasswordRouter)
-app.use('/profile', fistTimeLoginMiddleware, profileRouter)
-app.use('/sale_history', fistTimeLoginMiddleware, saleHistoryRouter)
-app.use('/products', viewProductRouter);
-app.use('/updateproducts', updateProductRouter)
+app.use('/transaction', loginMiddleware, fistTimeLoginMiddleware, transactionRouter)
+app.use('/salespersons', loginMiddleware, salespersonRouter)
+app.use('/logout',  loginMiddleware, logoutRouter)
+app.use('/set_password', loginMiddleware, setPasswordRouter)
+app.use('/profile', loginMiddleware, fistTimeLoginMiddleware, profileRouter)
+app.use('/sale_history', loginMiddleware, fistTimeLoginMiddleware, saleHistoryRouter)
+app.use('/products', loginMiddleware, viewProductRouter);
+app.use('/updateproducts', loginMiddleware, updateProductRouter)
+
 app.get('/', (req, res) => {
 
   if(!req.session.user) {
-      return res.redirect('/login')
+    return res.redirect('/login')
   }
   const user = req.session.user
   console.log(user)
@@ -87,6 +90,11 @@ app.get('/', (req, res) => {
   })
   .catch(err => console.log(err))
 })
+
+
+
+
+
 
 
 
